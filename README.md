@@ -1,6 +1,7 @@
 # Simple neptune.ai Logger
 This repository provides simple but useful python class to manage experiments using [neptune.ai](https://neptune.ai).
-[neptune.ai](https://neptune.ai) is a simple but powerful experiment management service. In this repository, I provide a simple logger class to log metrics, images, files, artifacts and hyper-parameters for any experiment.
+[neptune.ai](https://neptune.ai) is a simple but powerful experiment management service. In this repository, I provide a simple logger class to log metrics, images, files, artifacts and hyper-parameters for any experiment. </br>
+A blog post I wrote about this can be found [here](https://yoonki-j.info/neptune-ai-intro/). (Written in Korean)
 
 # How-to-Use
 [NeptuneLogger](Neptune.py/NeptuneLogger.py) is implemented with python and neptune-client. Therefore, it can be intagrated with any project or experiment you would like to do. Detailed and step-by-step starter can be found [here](https://docs.neptune.ai/learn-about-neptune/ui.html).
