@@ -1,4 +1,3 @@
-from collections import OrderedDict
 import neptune
 
 class NeptuneLogger:
@@ -68,17 +67,3 @@ class NeptuneLogger:
 
     def log_artifact(self, artifact, destination=None):
         self.experiment.log_artifact(artifact, destination)
-
-if __name__ == '__main__':
-    api='eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vdWkubmVwdHVuZS5haSIsImFwaV91cmwiOiJodHRwczovL3VpLm5lcHR1bmUuYWkiLCJhcGlfa2V5IjoiNzZiMTkxYTctMjZmYS00NjlkLWE0ZDItNzQyNTkzNDhkYTc1In0='
-    logger = NeptuneLogger(
-        api_key=api,
-        project_name='yoonkij/neptunetest',
-        experiment_name='SanityCheckExp',
-        description='Run for sanity check NeptuneLogger class',
-        tags=['T1', 'T2'],
-        hparams={'lr': 0.01, 'batch_size': 100, 'dimensions': [10, 50, 100]},
-        upload_source_files=['README.md'],
-        hostname='YK SERVER',
-        offline=True
-    )
