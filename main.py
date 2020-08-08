@@ -51,7 +51,7 @@ optimizer = torch.optim.SGD(network.parameters(), lr=args.learning_rate)
 api = os.getenv('NEPTUNE_API_TOKEN')
 logger = NeptuneLogger(
     api_key=api,
-    project_name='yoonkij/neptunetest',
+    project_name='YOUR_ID/PROJECT_NAME',
     experiment_name='NeptuneMNIST',
     description='Sample MNIST code for Neptune Test',
     tags=['MNIST', 'YourTag'],
