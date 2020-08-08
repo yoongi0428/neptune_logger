@@ -1,4 +1,4 @@
-# https://nextjournal.com/gkoehler/pytorch-mnist
+# Core codes for training MNIST classifier are from https://nextjournal.com/gkoehler/pytorch-mnist
 
 import os
 import random
@@ -16,6 +16,7 @@ from Neptune import NeptuneLogger
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
+# Arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--num_epochs', type=int, default=5)
 parser.add_argument('--batch_size', type=int, default=1024)
@@ -25,6 +26,7 @@ args = parser.parse_args()
 
 set_random_seed(args.seed)
 
+# Load MNIST data from torchvision
 train_loader = torch.utils.data.DataLoader(
     torchvision.datasets.MNIST('data', train=True, download=True,
                                 transform=torchvision.transforms.Compose([
@@ -41,9 +43,11 @@ test_loader = torch.utils.data.DataLoader(
                                     ])),
                                 batch_size=args.batch_size, shuffle=False)
 
+# Define classifier and optimizer
 network = Net().to(device)
 optimizer = torch.optim.SGD(network.parameters(), lr=args.learning_rate)
 
+# Build NeptuneLogger
 api = os.getenv('NEPTUNE_API_TOKEN')
 logger = NeptuneLogger(
     api_key=api,
@@ -57,8 +61,10 @@ logger = NeptuneLogger(
     offline=False
 )
 
+# Log hyper-parameters
 logger.log_hparams(vars(args))
 
+# Train classifier
 train_loss_history = []
 test_acc_history = []
 
@@ -112,6 +118,7 @@ for epoch in range(1, args.num_epochs + 1):
         best_acc = test_acc
         torch.save(network.state_dict(), 'model.p')
     
+    # Log train loss and test accuracy every epoch to Neptune
     logger.log_metric('Train Loss', train_loss, epoch=epoch)
     logger.log_metric('Test Acc.', test_acc, epoch=epoch)
 
@@ -120,15 +127,15 @@ for epoch in range(1, args.num_epochs + 1):
 
 logger.log_artifact('model.p')
 
-# Plot loss history
+# Plot train loss and log to Neptune
 fig = plt.figure()
 plt.title('Train Loss by Epoch')
 plt.xlabel('Epoch')
 plt.ylabel('NLL Loss')
 plt.plot(list(range(len(train_loss_history))), train_loss_history, color='blue')
-# plt.show()
 logger.log_image('Train Loss Plot', fig)
 
+# Plot test accuracy and log to Neptune
 fig = plt.figure()
 plt.title('Test Accuracy by Epoch')
 plt.xlabel('Epoch')
@@ -137,7 +144,7 @@ plt.plot(list(range(len(test_acc_history))), test_acc_history, color='blue')
 # plt.show()
 logger.log_image('Test Accuracy Plot', fig)
 
-# # Plot prediction
+# Plot Sample predictions and log to Neptune
 examples = enumerate(test_loader)
 batch_idx, (example_data, example_targets) = next(examples)
 with torch.no_grad():
